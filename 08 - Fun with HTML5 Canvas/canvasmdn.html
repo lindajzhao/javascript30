@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HTML5 Canvas</title>
+    <style>
+    canvas {
+        border: 1px solid black;
+
+    }
+    </style>
+</head>
+
+<body>
+    <!-- <img id="source" src="https://mdn.mozillademos.org/files/5397/rhino.jpg" width="300" height="227"> -->
+<canvas id="canvas"></canvas>
+<button id="save">SAVE</button>
+
+
+
+    <script>
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+
+    // var image = new Image(60, 45);   // using optional size for image
+    // canvas.width = window.innerWidth;
+    // canvas.height = window.innerHeight;
+    // image.onload = drawImageActualSize; // draw when image has loaded
+
+    // load an image of intrinsic size 300x227 in CSS pixels
+    // image.src = './IMG_20180217_102224.jpg';
+    // ctx.drawImage(image,0,0);
+    //  image.crossOrigin = "anonymous";
+
+    function drawImageActualSize() {
+        // use the intrinsic size of image in CSS pixels for the canvas element
+        // canvas.width = this.naturalWidth;
+        // canvas.height = this.naturalHeight;
+
+        // will draw the image as 300x227 ignoring the custom size of 60x45
+        // given in the constructor
+        ctx.drawImage(this, 0, 0);
+
+        // To use the custom size we'll have to specify the scale parameters 
+        // using the element's width and height properties - lets draw one 
+        // on top in the corner:
+        ctx.drawImage(this, 0, 0, this.width, this.height);
+
+    }
+        //testing
+        let image = new Image();
+        // image.src = 'IMG_20180217_102224.jpg';
+        image.src = 'https://image.slidesharecdn.com/html5canvas-150804151955-lva1-app6892/95/html5-canvas-31-638.jpg?cb=1438701653';
+        // image.src = document.getElementById('source');
+        window.onload = () => {
+
+            console.log(image);
+            ctx.drawImage(image, 0, 0);
+        }
+        canvas.width = 500;
+        canvas.height = 500;
+
+
+    ///////////////
+    ctx.strokeStyle = "#444aaa";
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 50;
+
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+
+    // e is where the mouse is
+    function draw(e) {
+        if (!isDrawing) return;
+        console.log(e, ctx.lineWidth);
+        ctx.beginPath(e);
+
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+
+        lastX = e.offsetX;
+        lastY = e.offsetY;
+    }
+
+    // draw only when mouse it moving
+    canvas.addEventListener('mousemove', draw);
+
+    // do not draw after mouseup or mouseout
+    canvas.addEventListener('mousedown', (e) => {
+        isDrawing = true
+        lastX = e.offsetX;
+        lastY = e.offsetY;
+    });
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mouseout', () => isDrawing = false);
+
+
+
+    ///////////////////
+    // save button
+
+    
+    const save = document.getElementById('save');
+    save.addEventListener('click', (e) => {
+        image.setAttribute('crossOrigin', 'anonymous');
+        const dataURL = canvas.toDataURL()
+        console.log(dataURL);
+    });
+    </script>
+
+</body>
+
+</html>

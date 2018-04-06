@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+</head>
+<body>
+  <!-- <img id="img" src="https://imasters.com/wp-content/uploads/sites/24/2016/06/canvas-1024x393.png" alt=""> -->
+
+  <img id="source" src="./IMG_20180217_102224.jpg">
+  <canvas id="draw" width="800" height="800"></canvas>
+
+
+
+
+<script>
+const canvas = document.querySelector('#draw');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+ctx.strokeStyle = "#19e84a";
+ctx.lineJoin = 'round';
+ctx.lineCap = 'round';
+ctx.lineWidth = 8;
+
+let isDrawing = false;
+let lastX = 0;
+let lastY = 0;
+
+// e is where the mouse is
+function draw(e) {
+  if(!isDrawing) return;
+  console.log(e);
+  ctx.beginPath(e);
+
+  ctx.moveTo(lastX, lastY);
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.stroke();
+
+  lastX = e.offsetX;
+  lastY = e.offsetY;
+}
+
+// draw only when mouse it moving
+canvas.addEventListener('mousemove', draw);
+
+// do not draw after mouseup or mouseout
+canvas.addEventListener('mousedown', (e) => {
+  isDrawing = true
+  lastX = e.offsetX;
+  lastY = e.offsetY;
+});
+canvas.addEventListener('mouseup', () => isDrawing = false);
+canvas.addEventListener('mouseout', () => isDrawing = false);
+
+// link up to html image element
+// var img = new Image();
+// img.scr = document.querySelector('.img');
+const img = document.querySelector('#img');
+// console.log(img);
+// ctx.drawImage(img, 0, 0);
+
+  var image = document.getElementById('source');
+
+  ctx.drawImage(image, 33, 71);
+
+</script>
+
+<style>
+  html, body {
+    margin:0;
+  }
+
+  #draw {
+    border: 1px solid black;
+  }
+</style>
+
+</body>
+</html>
