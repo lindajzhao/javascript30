@@ -6,6 +6,7 @@
 </head>
 <body>
 
+<!-- this lesson: Date object, methods, refactoring, transform, tranform-origin, transition -->
 
     <div class="clock">
       <div class="clock-face">
@@ -62,13 +63,63 @@
       background:black;
       position: absolute;
       top:50%;
+      
+      /* origin: 100% is right */
+      transform-origin: 100%;
+      /* start vertically from top */
+      transform: rotate(90deg);
+      transition: all 0.1s;
+      transition-timing-function: ease-in-out;
     }
+    
+    /* make clock hads different lengths */
+    .second-hand {
+      width: 20%;
+      left: 30%;
+    }
+
+    .min-hand {
+      width:30%;
+      left: 20%;
+    } 
 
   </style>
 
-  <script>
+<script>
+  const secondHand = document.querySelector('.second-hand');
+  const minuteHand = document.querySelector('.min-hand');
+  const hourHand = document.querySelector('.hour-hand');
 
+  function setDate() {
+    const now = new Date();
 
-  </script>
+    const seconds = now.getSeconds();
+    // 60 steps in rotation, convert to degrees. 90 to offset the CSS 90 deg
+    const secondDegrees = ((seconds / 60) * 360) + 90;
+    
+    const minutes = now.getMinutes();
+    const minuteDegrees = ((minutes / 60) * 360) + 90;
+    
+    const hours = now.getHours();
+    const hourDegrees = ((hours / 12) * 360) + 90;
+    
+    // remove transition between 360/0 for smooth animation
+    if (seconds === 59) {
+      secondHand.style.transition = `none`;
+    } 
+    if (minutes === 59) {
+      minuteHand.style.transition = `none`;
+    } 
+    if (hours === 11) {
+      hourHand.style.transition = `none`;
+    } 
+    
+    secondHand.style.transform = `rotate(${secondDegrees}deg)`;
+    minuteHand.style.transform = `rotate(${minuteDegrees}deg)`;
+    hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+  }
+
+setInterval(setDate, 1000);
+</script>
 </body>
 </html>

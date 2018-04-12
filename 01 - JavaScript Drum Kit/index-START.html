@@ -58,7 +58,29 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+// in this: audio object, methods, properties, custom HTML data, "transitionend" event listener
+function playSound(e) {
+  // e.keyCode is a number given to a key.
+  // select the audio element with that keyCode - will be null if there is no audio element w/ that keyCode
+  const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+  const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+  if (!audio) return; // stop function if unregistered key is pressed
+  key.classList.add('playing');
+  // restart from beginning of audio
+  audio.currentTime = 0;
+  audio.play();
+}
 
+// setTimeout must match the animation timing in CSS, there is a better solution
+function removeTransition(e) {
+  // skip if current e is NOT for transform
+  if (e.propertyName !== 'transform') return;
+  this.classList.remove('playing');
+}
+
+const keys = document.querySelectorAll('.key');
+window.addEventListener('keydown', playSound);
+keys.forEach(key => key.addEventListener('transitionend', removeTransition));
 </script>
 
 
