@@ -5,65 +5,61 @@
   <title>HTML5 Canvas</title>
 </head>
 <body>
-  <!-- <img id="img" src="https://imasters.com/wp-content/uploads/sites/24/2016/06/canvas-1024x393.png" alt=""> -->
 
-  <img id="source" src="./IMG_20180217_102224.jpg">
-  <canvas id="draw" width="800" height="800"></canvas>
-
-
-
+<canvas id="draw" width="800" height="800"></canvas>
 
 <script>
 const canvas = document.querySelector('#draw');
+// draw on "context", not canvas element directly
 const ctx = canvas.getContext('2d');
 
+//dynamically size the canvas
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-ctx.strokeStyle = "#19e84a";
-ctx.lineJoin = 'round';
-ctx.lineCap = 'round';
-ctx.lineWidth = 8;
 
+// only draw when cursor is down
 let isDrawing = false;
 let lastX = 0;
 let lastY = 0;
 
-// e is where the mouse is
-function draw(e) {
+// to change color HSL
+let hue = 0;
+
+// change properties of stroke
+ctx.lineJoin = 'round';
+ctx.lineCap = 'round';
+ctx.lineWidth = 60;
+
+const draw = (e) => {
+  // do not draw if no moused down.
   if(!isDrawing) return;
-  console.log(e);
-  ctx.beginPath(e);
+  // change color
+  ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
 
+  ctx.beginPath();
+  // start from
   ctx.moveTo(lastX, lastY);
+  // go to
   ctx.lineTo(e.offsetX, e.offsetY);
+  // render stroke on canvas
   ctx.stroke();
-
-  lastX = e.offsetX;
-  lastY = e.offsetY;
+  // end line at lastX and lastY
+  [lastX, lastY] = [e.offsetX, e.offsetY];
+  hue++;
+  console.log(hue)
+  if(hue >= 360) {
+    hue = 0;
+  }
 }
 
-// draw only when mouse it moving
 canvas.addEventListener('mousemove', draw);
-
-// do not draw after mouseup or mouseout
+// start line at lastX and lastY
 canvas.addEventListener('mousedown', (e) => {
-  isDrawing = true
-  lastX = e.offsetX;
-  lastY = e.offsetY;
+  isDrawing = true;
+  [lastX, lastY] = [e.offsetX, e.offsetY];
 });
 canvas.addEventListener('mouseup', () => isDrawing = false);
 canvas.addEventListener('mouseout', () => isDrawing = false);
-
-// link up to html image element
-// var img = new Image();
-// img.scr = document.querySelector('.img');
-const img = document.querySelector('#img');
-// console.log(img);
-// ctx.drawImage(img, 0, 0);
-
-  var image = document.getElementById('source');
-
-  ctx.drawImage(image, 33, 71);
 
 </script>
 
