@@ -25,17 +25,21 @@ let lastY = 0;
 // to change color HSL
 let hue = 0;
 
+// to control if line should get thicker or thinner
+let direction = true;
+
+
 // change properties of stroke
 ctx.lineJoin = 'round';
 ctx.lineCap = 'round';
-ctx.lineWidth = 60;
+ctx.lineWidth = 100;
+ctx.globalCompositeOperation = 'multiply';
 
 const draw = (e) => {
   // do not draw if no moused down.
   if(!isDrawing) return;
   // change color
   ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
-
   ctx.beginPath();
   // start from
   ctx.moveTo(lastX, lastY);
@@ -45,10 +49,19 @@ const draw = (e) => {
   ctx.stroke();
   // end line at lastX and lastY
   [lastX, lastY] = [e.offsetX, e.offsetY];
-  hue++;
-  console.log(hue)
+  hue++; // 360+ will just reset itself
   if(hue >= 360) {
     hue = 0;
+  }
+
+  if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {
+    direction = !direction; // switch the direction
+  }
+
+  if(direction) {
+    ctx.lineWidth++;
+  } else {
+    ctx.lineWidth--;
   }
 }
 
