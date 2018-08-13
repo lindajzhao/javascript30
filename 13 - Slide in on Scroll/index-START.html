@@ -58,6 +58,34 @@
       };
     }
 
+    const sliderImages = document.querySelectorAll('.slide-in');
+
+    function checkSlide(e) {
+      // window.scrollY: (pixel) distance from top of doc to top of viewport
+      // window.innerHeight: (pixel) height of viewport
+      // sliderImage.height: (pixel) half the height of each image
+      // sliderImge.offsetTop: (pixel) distance from top of doc to top of image
+
+      sliderImages.forEach(sliderImage => {
+        // Slide in when the top of the image is halfway through the screen
+        const distanceFromTop = window.scrollY + window.innerHeight;
+        const slideInAt = distanceFromTop - (sliderImage.height / 2);
+        
+        // Remove images once they are outside the screen
+        const imageBottom = sliderImage.offsetTop + sliderImage.height;
+
+        const isHalfShown = slideInAt > sliderImage.offsetTop;
+        const isNotScrolledPast = window.scrollY < imageBottom;
+        
+        if(isHalfShown && isNotScrolledPast) {
+          sliderImage.classList.add('active');
+        } else {
+          sliderImage.classList.remove('active');
+        }
+      })
+    }
+
+    window.addEventListener('scroll', debounce(checkSlide));
   </script>
 
   <style>
